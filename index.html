@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<link rel="preconnect" href="https://script.google.com">
+<link rel="preconnect" href="https://script.googleusercontent.com">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dr. G.W. Williams Music Program – Instrument Inventory</title>
+<style>
+:root{--ink:#16181d;--mute:#6b7280;--line:#e3e5ea;--paper:#f5f6f8;--card:#fff;--accent:#1f6f54;--accent-d:#175440;--warn:#b45309;--bad:#b42318;--blue:#2753c4}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;background:var(--paper)}
+html,body{overflow-anchor:none}
+body{touch-action:manipulation;font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:var(--paper);color:var(--ink)}
+header{background:#000;color:#fff}
+.bar{max-width:1280px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.logo{width:60px;height:60px;display:block}
+.brand{flex:1;min-width:220px}
+h1{font:700 1.35rem/1.2 Georgia,"Times New Roman",serif}
+.brand p{color:#a3a8b3;font-size:.9rem;margin-top:2px}
+.who{display:flex;align-items:center;gap:12px;font-size:.88rem;color:#a3a8b3}
+main{max-width:1280px;margin:0 auto;padding:20px}
+.stats{display:flex;flex-wrap:wrap;gap:8px 32px;padding-bottom:18px;border-bottom:1px solid var(--line);margin-bottom:18px}
+.stats div{display:flex;align-items:baseline;gap:8px}
+.stats b{font:700 1.7rem/1 Georgia,serif}
+.stats span{color:var(--mute);font-size:.88rem}
+.tools{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px}
+.tools input[type=search]{flex:1 1 260px}
+input,select{font:inherit;font-size:16px;color:inherit;background:#fff;border:1px solid #cfd3db;border-radius:6px;padding:8px 10px;min-height:40px;width:100%}
+.tools select{width:auto;flex:0 1 180px}
+input:focus,select:focus,button:focus-visible{outline:2px solid var(--blue);outline-offset:1px}
+button{font:inherit;font-weight:600;border-radius:6px;padding:8px 14px;min-height:40px;cursor:pointer;border:1px solid #cfd3db;background:#fff;color:var(--ink)}
+button:hover{background:#eef0f3}
+button.go{background:var(--accent);border-color:var(--accent);color:#fff}
+button.go:hover{background:var(--accent-d)}
+header button{background:transparent;border-color:#4b5060;color:#fff}
+header button:hover{background:#1f2229}
+.spacer{flex:1}
+.wrap{background:var(--card);border:1px solid var(--line);border-radius:8px;overflow-x:auto}
+table{width:100%;border-collapse:collapse;text-align:left}
+th{font-size:.78rem;color:var(--mute);font-weight:600;padding:10px 14px;border-bottom:1px solid var(--line);background:#fafbfc;white-space:nowrap}
+td{padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+tbody tr:hover{background:#fafbfc}
+.id{font-weight:700;white-space:nowrap}
+.dim{color:var(--mute)}
+.audit{color:var(--warn);font-weight:600}
+.st{white-space:nowrap}
+.st::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;background:var(--blue)}
+.st.Available::before{background:var(--accent)}
+.st.Repair::before{background:var(--bad)}
+td button{padding:3px 12px;min-height:32px;font-size:.85rem}
+.empty{padding:36px;text-align:center;color:var(--mute)}
+dialog{margin:auto;border:0;border-radius:10px;padding:24px;width:min(500px,calc(100% - 32px));max-height:90vh;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+dialog::backdrop{background:rgba(10,12,18,.55)}
+dialog h2{font:700 1.2rem Georgia,serif;margin-bottom:16px}
+label{display:block;font-size:.85rem;font-weight:600;margin:0 0 4px}
+.f{margin-bottom:12px}
+.acts{display:flex;justify-content:flex-end;gap:8px;margin-top:20px}
+.err{color:var(--bad);font-size:.88rem;min-height:1.2em}
+@media(max-width:1100px),(pointer:coarse){
+ .wrap{overflow:visible;background:none;border:0}
+ .bar{padding:10px 14px;gap:10px}
+ .logo{width:46px;height:46px}
+ .brand{min-width:0}
+ h1{font-size:1.05rem}
+ .brand p{display:none}
+ body{min-height:1100px} /* fixed pixel height (not vh): keeps short sections scrollable without ever looping inside an auto-sizing frame */
+ main{padding:12px 12px calc(720px + env(safe-area-inset-bottom))} /* fixed px (never vh): enough room that the last 2-3 cards can be scrolled fully up, even when the phone's bottom bar or the embed covers the lower part of the frame */
+ .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;padding-bottom:12px;margin-bottom:12px}
+ .stats div{flex-direction:column;align-items:flex-start;gap:2px}
+ .stats b{font-size:1.3rem}
+ .stats span{font-size:.7rem}
+ .tools{gap:8px;margin-bottom:12px}
+ .tools select{flex:1 1 40%}
+ .spacer{display:none}
+ #soBtn{flex:1 1 100%}
+ .tools button{flex:1 1 40%}
+ tr{background:var(--card);border:1px solid var(--line);border-radius:8px;margin-bottom:10px}
+ thead{display:none}
+ table,tbody,tr,td{display:block}
+ tr{padding:10px 14px}
+ td{display:flex;justify-content:space-between;gap:16px;padding:4px 0;border:0;text-align:right}
+ td::before{content:attr(data-l);color:var(--mute);font-size:.82rem;text-align:left;flex:none}
+ td.id{font-size:1.05rem}
+}
+button[hidden]{display:none}
+#logList{max-height:55vh;overflow-y:auto;margin:0 -4px;padding:0 4px}
+@media(max-width:1100px),(pointer:coarse){#logList{max-height:none;overflow:visible;margin:0;padding:0}}
+.logrow{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px solid var(--line)}
+.logrow:last-child{border-bottom:0}
+.logt{color:var(--mute);font-size:.82rem;white-space:nowrap;text-align:right}
+dialog[open]{position:absolute;top:0;bottom:auto;left:0;right:0;margin:12px auto}
+label.agree{display:flex;gap:10px;align-items:flex-start;font-size:.9rem;font-weight:600;line-height:1.4;cursor:pointer;margin:4px 0 8px}
+label.agree input{width:22px;height:22px;min-height:22px;flex:none;margin-top:1px}
+.soRes{max-height:210px;overflow-y:auto;border:1px solid #cfd3db;border-radius:6px;margin-top:6px;background:#fff}
+.soRes button{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid #eceef2;border-radius:0;font-weight:500;padding:8px 10px;min-height:40px;font-size:.9rem;background:#fff}
+.soRes .none{padding:10px;color:#6b7280;font-size:.9rem}
+.soSel{background:#f4f4f2;border-radius:8px;padding:8px 10px;margin-top:6px;font-size:.9rem;font-weight:600}
+</style>
+</head>
+<body>
+<header>
+ <div class="bar">
+  <img class="logo" src="data:image/png;base64,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" alt="Williams Music">
+  <div class="brand">
+   <h1>Dr. G.W. Williams Music Program</h1>
+   <p>Instrument sign-out and inventory</p>
+  </div>
+  <div class="who"><span id="mode">View only</span><button id="logBtn" hidden>Activity log</button><button id="authBtn">Admin login</button></div>
+ </div>
+</header>
+
+<main>
+ <div class="stats">
+  <div><b id="s-total">0</b><span>total</span></div>
+  <div><b id="s-out">0</b><span>signed out</span></div>
+  <div><b id="s-in">0</b><span>in storage</span></div>
+  <div><b id="s-rep">0</b><span>in repair</span></div>
+  <div><b id="s-aud">0</b><span>no serial</span></div>
+ </div>
+
+ <div class="tools">
+  <input type="search" id="q" placeholder="Search by student, tag, make or serial number">
+  <select id="fSection"><option value="">All sections</option></select>
+  <select id="fStatus">
+   <option value="">All statuses</option>
+   <option value="Assigned">Signed out</option>
+   <option value="Available">In storage</option>
+   <option value="Out for Repair">In repair</option>
+  </select>
+  <span class="spacer"></span>
+  <button class="go" id="soBtn">Sign out / return</button>
+  <button id="addBtn">Add instrument</button>
+  <button id="csvBtn" hidden>Export CSV</button>
+ </div>
+
+ <div id="sync" class="dim" style="font-size:.8rem;margin:-6px 0 10px"></div>
+ <div class="wrap">
+  <table>
+   <thead><tr><th>Tag</th><th>Section</th><th>Make / model</th><th>Serial</th><th>Assigned to</th><th>Grade</th><th>Also used by</th><th>Status</th><th>Signed out by</th><th></th></tr></thead>
+   <tbody id="rows"></tbody>
+  </table>
+  <div class="empty" id="none" hidden>No instruments match those filters.</div>
+ </div>
+</main>
+
+<dialog id="dLogin">
+ <h2>Admin login</h2>
+ <form id="fLogin" autocomplete="off">
+  <div class="f"><label for="lu">Username</label><input id="lu" required autocapitalize="none" autocorrect="off" spellcheck="false"></div>
+  <div class="f"><label for="lp">Password</label><input id="lp" type="password" required autocomplete="new-password" autocapitalize="none" autocorrect="off" spellcheck="false"></div>
+  <div class="err" id="lerr"></div>
+  <div class="acts"><button type="button" data-close>Cancel</button><button class="go">Log in</button></div>
+ </form>
+</dialog>
+
+<dialog id="dSO">
+ <h2>Sign out or return an instrument</h2>
+ <form id="fSO">
+  <div class="f"><label for="soQ">Instrument</label>
+   <input id="soQ" type="search" autocomplete="off" placeholder="Type a tag, name or instrument to search">
+   <input type="hidden" id="soI">
+   <div id="soRes" class="soRes"></div>
+   <div id="soSel" class="soSel" hidden></div></div>
+  <div class="f"><label for="soA">What are you doing?</label>
+   <select id="soA"><option value="out">Sign out to a student</option><option value="ret">Return to storage</option><option value="rep">Send out for repair</option></select></div>
+  <div id="soF">
+   <div class="f"><label for="soN">First name</label><input id="soN" autocomplete="off"></div>
+   <div class="f"><label for="soL">Last name</label><input id="soL" autocomplete="off"></div>
+   <div class="f"><label for="soG">Grade</label><select id="soG"><option value=""></option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option></select></div>
+   <label class="agree"><input type="checkbox" id="soAgree"><span>I agree to take responsibility for any damage done to this instrument while signed out by me.</span></label>
+   <div class="err" id="soErr"></div>
+  </div>
+  <div class="acts"><button type="button" data-close>Cancel</button><button class="go">Confirm</button></div>
+ </form>
+</dialog>
+
+<dialog id="dLog">
+ <h2>Activity log</h2>
+ <div id="logList"></div>
+ <div class="err" id="logErr"></div>
+ <div class="acts"><button type="button" id="logClear">Clear log</button><button type="button" class="go" data-close>Close</button></div>
+</dialog>
+
+<dialog id="dEdit">
+ <h2 id="eTitle">Edit instrument</h2>
+ <form id="fEdit">
+  <div class="f"><label for="eId">Tag (e.g. FLT-01)</label><input id="eId" required></div>
+  <div class="f"><label for="eSec">Section</label><input id="eSec" required></div>
+  <div class="f"><label for="eMake">Make / model</label><input id="eMake" required></div>
+  <div class="f"><label for="eSer">Serial number</label><input id="eSer" placeholder="Leave blank if unknown"></div>
+  <div class="f"><label for="ePri">Assigned to</label><input id="ePri"></div>
+  <div class="f"><label for="eGr">Grade</label><input id="eGr"></div>
+  <div class="f"><label for="eSe">Also used by</label><input id="eSe"></div>
+  <div class="f"><label for="eSt">Status</label>
+   <select id="eSt"><option value="Assigned">Signed out</option><option value="Available">In storage</option><option value="Out for Repair">In repair</option></select></div>
+  <div class="f"><label for="eBy">Currently signed out by</label><input id="eBy" autocomplete="off"></div>
+  <div class="err" id="eErr"></div>
+  <div class="acts"><button type="button" data-close>Cancel</button><button class="go">Save</button></div>
+ </form>
+</dialog>
+
+<script>
+// One instrument per line: tag|section|make|serial|assigned to|grade|also used by|status (V = in storage, R = in repair, blank = signed out)
+const RAW=`
+PIC-01|Piccolo|Yamaha (2020)|086883|Danielle Suen|11|Luna Zhou (Gr. 10)
+PIC-02|Piccolo|Yamaha (2023)|168417|Evelyn Sonemanivong|10|Victoria Cheng (Gr. 12)
+FLT-01|Flute|Yamaha (2025)|090456|Virika Lad|10|Frances Tang (Gr. 12)
+FLT-04|Flute|Yamaha (2023) IB|S50454|Phoebe Lu|11|
+FLT-05|Flute|Selmer|7281365|Deniise Ma|9|
+FLT-06|Flute|Yamaha|3100005||||V
+FLT-07|Flute|Jupiter|UD59539|Amelia Ng|9|
+FLT-09|Flute|Philharmonic|E64066|Betty Liao|10|Akili Fu (Gr. 9)
+FLT-11|Flute|Yamaha (2025)|087095|Kaitlyn Liu|9|Fiona Chen (Gr. 11)
+FLT-12|Flute|Yamaha|016118|Eva Lin|9|
+FLT-14|Flute|Yamaha|034121|Caroline Kim|11|Aidan Xie (Gr. 9)
+FLT-15|Flute|Yamaha (2023) IB|005781|Victoria Cheng|12|
+FLT-16|Flute|Yamaha (2022) IB|S07158|Gracie Wu|11|
+FLT-17|Flute|Yamaha|028470|Yalaena Valencia|11|
+FLT-18|Flute|Selmer|7281366|Priscilla Ye|9|
+FLT-19|Flute|Yamaha (2022) IB|S07163|Katherine Tan|12|
+FLT-24|Flute|Buffett|676608|Ashley Fu|9|
+FLT-25|Flute|Yamaha|871802|Olivia Barros|9|
+FLT-26|Flute|Yamaha|406720A|Karen Jia|10|
+FLT-28|Flute|Selmer|7281111|Adele Poon|10|
+OBO-01|Oboe|Yamaha|0-11871|Mavis Lee|10|Ankie Lo (Gr. 9)
+OBO-02|Oboe|Yamaha|024307|Hillary Chen|10|Reanna Ko (Gr. 9)
+OBO-03|Oboe|Yamaha Duet (2022)|0711246|Mehryad Bayat|11|
+OBO-04|Oboe|Yamaha Duet (2025)|075951|Jaden Wu|11|
+OBO-05|Oboe|Yamaha (2025)|016697|Izabella Pilcz|11|
+OBO-TD|Oboe|TDSS Borrowed||Luna Zhu|10|Priscilla Ye (Gr. 9)
+BSN-01|Bassoon|Fox|45468|Evan Trinh|11|Ella Guan (10), Linus Cheung (9)
+BSN-02|Bassoon|Fox-41 (2024)|73932|Lauren Cassell|12|Callum Ho (Gr. 9)
+BSN-EC|Bassoon|Fox (Emily Carr)||Leona Xiong|10|Jenny Ji (11), Wynn Zhao (9)
+BSN-TD|Bassoon|TDSS Borrowed||Logan Leung|10|Jennifer He (Gr. 9)
+CLA-01|Clarinet|Yamaha (2024)|R31245|Sarah McGuire|12|
+CLA-02|Clarinet|Yamaha||Mia Cao|9|
+CLA-03|Clarinet|Jupiter|UE62366|Jordan Ji|9|
+CLA-04|Clarinet|Yamaha (2025)|R33927|Megan Guo|9|Alison Li (Gr. 10)
+CLA-05|Clarinet|Yamaha (2024)|R30889|Sophie Zhang|10|Iris Liu (Gr. 9)
+CLA-06|Clarinet|Yamaha (2025)|R32930|Jasmine Zhen|12|Teresa Xu (Gr. 10)
+CLA-07|Clarinet|Yamaha (2024)||Liam Gaertner|12|Andre Duong (Gr. 9)
+CLA-08|Clarinet|Yamaha (2024)||Archita Aasdhir|10|
+CLA-09|Clarinet|Yamaha (2025)|R33923|Maya Mantia|12|Jayden Tang (Gr. 9)
+CLA-10|Clarinet|Yamaha (2024)||Emily Snape|12|
+CLA-11|Clarinet|Yamaha (2025)|R29147|Nina Garcia|12|Alison Wang (Gr. 9)
+CLA-12|Clarinet|Yamaha|123860|Behrad Khorsandi|10|Chloe Zhu (Gr. 9)
+CLA-13|Clarinet|Jupiter|UE62362|Ryan Lee|10|
+CLA-14|Clarinet|Artley|39 16384|Hana Asgharian|9|
+CLA-16|Clarinet|Selmer USA|69180|Rachael Yi|10|
+CLA-17|Clarinet|Yamaha (2025)|R33253|Jayden Jung|11|Daphne Lo (Gr. 9)
+CLA-18|Clarinet|Buffet|457440|Samuel Wang|9|
+CLA-21|Clarinet|Yamaha|B12466|Yoav Mor|9|
+CLA-22|Clarinet|Yamaha|028197A|Josie Either|9|
+CLA-23|Clarinet|Yamaha|0-55137A|Annie Zhuang|9|
+CLA-24|Clarinet|Selmer (2021)|P0168701|Chloe Du|9|
+CLA-27|Clarinet|Yamaha|055426A|Nika Hosseini|9|
+CLA-28|Clarinet|Yamaha|0-71666|Hylas Lin|9|Luna Zhu (Gr. 10)
+CLA-29|Clarinet|Yamaha (2025)|R33402|J Henriques|12|Madison Henriques (Gr. 10)
+CLA-30|Clarinet|Vito|50318|Amelia Young|9|
+CLA-31|Clarinet|Artley|7100132|Nava Sherzai|9|
+CLA-32|Clarinet|Vito|B09250|Oscar Ye|9|
+CLA-33|Clarinet|Vito|B43953|Joseph Lee|10|Belinda Lu (Gr. 9)
+CLA-34|Clarinet|Buffet|457368|Misha Kushal|11|Emily Reed (Gr. 9)
+CLA-35|Clarinet|Buffet|7101961|Reagan Ye|9|
+CLA-36|Clarinet|Yamaha (2019)|13637|Carina Meng|10|
+CLA-37|Clarinet|Yamaha|7613||||R
+CLA-38|Clarinet|Armstrong|219126|Amelia Behrooz|9|
+CLA-39|Clarinet|Frankenstein||Ethan Cheng|9|
+CLA-40|Clarinet|Selmer||Aiden Fridman|9|
+BCL-01|Bass Clarinet|Jupiter|UE66347|Jacob Gold|11|Alex Zhou (Gr. 9)
+BCL-02|Bass Clarinet|Jupiter|D80244|Viriginia Xia|11|Annie Li (Gr. 9)
+BCL-03|Bass Clarinet|Selmer|67491|Jayden Tang|12|Aishia Gehlot (Gr. 9)
+BCL-04|Bass Clarinet|Vito|678OE|Signy Nguyen|10|Matthew Wong (Gr. 9)
+BCL-05|Bass Clarinet|Yamaha|002251|Jeffrey Lau|10|Tyler Karakashian (Gr. 9)
+BCL-06|Bass Clarinet|Jupiter|L70940|Morgan Dionne|10|Larissa Han (Gr. 9)
+BCL-07|Bass Clarinet|Jupiter|VE62578|Najla Najafi|10|Elvin Huang (Gr. 9)
+BCL-08|Bass Clarinet|Jupiter|P71978|Ben Zhou|9|
+SAX-S01|Soprano Sax|Jupiter|536601||||V
+SAX-A01|Alto Sax|Jupiter 700 (2022)|WF01297|Eric Cheng|12|Jason Kwon (Gr. 9)
+SAX-A02|Alto Sax|Yamaha|218140|Doris Lin|9|Evelyn Sonemanivong (10, Jazz)
+SAX-A04|Alto Sax|Yamaha-61|4972|Katya Krinisyn|10|Charlotte Andary (Gr. 9)
+SAX-A05|Alto Sax|Yamaha-61|5005|Sienna Mio|12|Victoria Papadimatos (Gr. 9)
+SAX-A06|Alto Sax|Jupiter 700 (2022)|XF02521|Ella Guan|10|Andre Tang (Gr. 9)
+SAX-A07|Alto Sax|Jupiter 700 (2022)|TF06737|Bellina Li|10|
+SAX-A08|Alto Sax|Jupiter 700 (2022)|TF06620|Elora Rossouw|11|Yoav Mor (9, Jazz)
+SAX-A09|Alto Sax|Jupiter 700 (2022)|XF07190|Lyla Garlow|9|
+SAX-A10|Alto Sax|Evette|650156|Vanessa Munits|10|
+SAX-A11|Alto Sax|Jupiter 700 (2022)|UF03619|Samuel Wang|11|
+SAX-A12|Alto Sax|Jupiter 700 (2022)|XF07193|Jireh Andrews|10|Mina Gosse-Gomes (Gr. 9)
+SAX-A14|Alto Sax|Yamaha|312577A|Damian Dayaljee|9|
+SAX-A15|Alto Sax|Yamaha|030921|Alvin Zou|10|Zoe Zhu (Gr. 9)
+SAX-A16|Alto Sax|Jupiter 700 (2022)|XF00635|Jane Du|10|Kimberly Cheung (Gr. 9)
+SAX-A17|Alto Sax|Yamaha|201711 A|Deniz Ozcan|12|Audrina Weng (9, Jazz)
+SAX-T01|Tenor Sax|Yamaha|0-60153|Wynn Zhao|9|Behrad Poorakbar (11, Jazz)
+SAX-T02|Tenor Sax|Yamaha|0-54411|Sunny Feng|10|Jey Srianujan (Gr. 9)
+SAX-T03|Tenor Sax|Yamaha YTS-480|R57245|Kosima Keo|10|Signy Nguyen (10, Jazz)
+SAX-T04|Tenor Sax|Yamaha YTS-480|R60924|Jasmine Liu|9|Matthew Wong (9, Jazz)
+SAX-T05|Tenor Sax|Jupiter|UF06279|Helya Keyhaninezhad|10|Boe Graham (Gr. 11)
+SAX-T07|Tenor Sax|Jupiter|TF08168|Ali Meschi|10|Ethan Tran (Gr. 11)
+SAX-T08|Tenor Sax|Yamaha YTS-480|R98710|Terrence Gu|12|Justin Lin (9), Aiden Xie (9, Jazz)
+SAX-T09|Tenor Sax|Yamaha|032252|Behrad Poorakbar|11|Hannah Yen (Gr. 9)
+SAX-T10|Tenor Sax|Yamaha YTS-480|R32965|Sophie Potapov|12|Talia Gharajeh (9, Jazz)
+SAX-T11|Tenor Sax|Yamaha|201281|Ian Tang|9|
+SAX-T12|Tenor Sax|Yamaha|047692A|Allegra Cristanti|11|Anya Liu (Gr. 10)
+SAX-B01|Bari Sax|Yamaha|017522|Evan Robichaud|10|Lucas Jiang (Gr. 9)
+SAX-B02|Bari Sax|Jupiter||Jason Huang|9|Kaitlyn Liu (9, Jazz)
+SAX-B03|Bari Sax|Yamaha|038935|Brayden Pan|12|Samuel Pan (Gr. 9)
+SAX-B04|Bari Sax|Bari Pro||Sarah Feng|10|
+SAX-B05|Bari Sax|Yamaha (2024)|012024|Elias Mio|10|
+SAX-B06|Bari Sax|Yamaha (2024)||Sathane Vivekananthan|11|Emily Cheng (10, Jazz)
+TRP-01|Trumpet|Yamaha|630809|Olivia Wang|10|Kareen Soubra (9, Jazz)
+TRP-02|Trumpet|Yamaha 3335 (2023)|175396|Soheil Rajaei Marbini|9|Deniise Ma (9, Jazz)
+TRP-03|Trumpet|Yamaha 1335|133163|Lucian Parmigiano|9|
+TRP-04|Trumpet|Bach|396125|Ilanah Arenzonova|10|Kaitlyn Ma (Gr. 9)
+TRP-05|Trumpet|Yamaha 3335 (2023)|297774|Anthony Mavros|12|Zachary Guo (9, Jazz)
+TRP-06|Trumpet|Yamaha 3335 (2023)|294322|Jayden Fu|10|
+TRP-07|Trumpet|Yamaha 3335 (2023)|301754|Lorin Watanabe|12|Wayne Wang (9, Jazz)
+TRP-08|Trumpet|Yamaha Japan|114206|Mark Kosynskyy|9|
+TRP-09|Trumpet|Yamaha|232013A|Joshua Ng|9|
+TRP-10|Trumpet|Yamaha 3335 (2023)|301770|Diana Kirazim|10|Austin Xu (Gr. 9)
+TRP-11|Trumpet|Besson 609|841957|Ava Shirali|10|Tristan Chan (9, Jazz)
+TRP-12|Trumpet|Yamaha 3335 (2023)|307293|Hendrix Nastou|10|Ben Hsu (Gr. 9)
+TRP-13|Trumpet|Yamaha 3335 (2023)|306594|Tyler Chieu|9|
+TRP-14|Trumpet|Yamaha|462876A|Lia Mui|11|Navya Bhardwaj (Gr. 9)
+TRP-15|Trumpet|Yamaha 3335 (2024)|316606|Marcus Wu|9|Ben Wong (10)
+TRP-16|Trumpet|Yamaha 3335 (2024)|311588|Liana Khorshid|10|
+TRP-17|Trumpet|Yamaha 3335 (2024)|313844|Orion Nastou|10|
+TRP-18|Trumpet|Yamaha 3335 (2024)|317636|Emanuel Volanis|10|Victoria Branscombe (11, Jazz)
+TRP-19|Trumpet|Yamaha 3335 (2023)|241572|Ben Vertlib|12|Jordan Ji (9, Jazz)
+TRP-20|Trumpet|Yamaha 3335 (2024)|317084|Diana Hu|11|Sopiha Chen (9, Jazz)
+TRP-21|Trumpet|Yamaha 3335 (2024)|316848|June Heping|11|Samantha Zhao (Gr. 9)
+TRP-22|Trumpet|Yamaha 3335 (2024)|317077|Olivia Liu|9|
+TRP-23|Trumpet|Yamaha (2023 Don.)|142388|Aram Alipour|12|Alissa Petkoff (9, Jazz)
+TRP-24|Trumpet|Yamaha Japan YTR232|159853A|Lewis Gunston|10|
+TRP-25|Trumpet|Yamaha|918073|Kevin Gao|9|
+FHN-01|Flugelhorn|King|918540||||V
+HNN-01|French Horn|Besson (Double)|04445|Wayne Wang|9|
+HNN-02|French Horn|Holton (Double)|H179 5-593190|Arwen Leong|11|Olivia Wang (10), Serena Lu (9)
+HNN-03|French Horn|Besson (Double)|04434|Victoria Branscombe|11|Matthew Branscombe (Gr. 9)
+HNN-04|French Horn|Conn (Double)|OP5157061218|Ella Hao|10|Kareem Soubra (Gr. 9)
+HNN-05|French Horn|Yamaha YFR567 (2023)|043416|Blake French|10|Elaine Liu (12), Kaitlyn Zhong (9)
+HNN-07|French Horn|Yamaha (2023)|054186|Eric Lee|11|Kimberly Tan (10), Mia Patel (9)
+HNN-08|French Horn|Jupiter (Double)|62123|Richard Lee|12|Claire Zhou (Gr. 10)
+HNN-10|French Horn|HHSS10||Alvin Cao|12|Chelleen Chun (Gr. 10)
+HNN-04B|French Horn|HHSS4||Athena Zhuo|10|Jay Fu (Gr. 9)
+HNN-13|French Horn|HHSS13||Tyler Jin|11|Fiona Irgengioro-Wu (10), Terry Wang (9)
+TRB-01|Trombone|Jupiter (2021)|416936|Arses Amiri|10|
+TRB-02|Trombone|Yamaha|249376|Roman Motylev|9|Jacob Pozdrowski (12, Jazz)
+TRB-03|Trombone|Yamaha (2023)|810025|Elena Zhang|11|Caleb Sales (Gr. 9)
+TRB-04|Trombone|Yamaha (2023)|813595|Rosha Rahnama|9|
+TRB-05|Trombone|Yamaha (2022)|798947|Fernando Guan|9|
+TRB-06|Trombone|Yamaha (2022)|798781|Emma Tang|11|Quintus Li (Gr. 9)
+TRB-07|Trombone|Yamaha (2022)|797589|Maha Latify|11|
+TRB-08|Trombone|King|974885|Matthew Branscombe|9|Mikka Oinonen (Gr. 9)
+TRB-09|Trombone|Yamaha (2023)|819304|Isabella Tan|10|Calix Tsang (Gr. 9)
+TRB-10|Trombone|Yamaha (2023)|809435|Noel Lam|9|
+TRB-11|Trombone|Yamaha (2022)|792437|Allison Miller|10|Zachary Guo (Gr. 9)
+TRB-12|Trombone|Yamaha (2022)|796405|Kaylee Pan|10|Tyler Karakashian (9)
+TRB-13|Trombone|Yamaha (2022)|798467|Aiden Ng|9|
+TRB-14|Trombone|Yamaha (2022)|798453|Hazal Ozcan|10|Patrick Fan (Gr. 9)
+TRB-15|Trombone|Yamaha (2022)|794887|Linnah Kimm|10|Matteo Allen (Gr. 12)
+TRB-16|Trombone|Yamaha (2022)|796417|Titus Wu|12|Elena Zhang (Tbn Quartet)
+TRB-17|Trombone|Yamaha (2022)|796488|Harsheen Anand|11|Evelyn Rossouw (9, Jazz)
+TRB-18|Trombone|Jupiter (2021)|416709|Sarah Long|9|Logan Gardhouse (9, Jazz)
+TRB-19|Trombone|King|783679|Frankie Huang|10|
+BTR-01|Bass Trombone|Yamaha|00-2686|Alastrina Ng|9|Jocelyn Zou (9, Jazz)
+BTR-RG|Bass Trombone|Yamaha (RGSS1)||Matteo Allen|11|Jazz Ensemble
+VTR-01|Valve Trombone|Mercedes II|684749|Bowen Pan|9|Jazz Ensemble
+EUP-01|Euphonium|Yamaha 4-Valve Reg.|00-3007|Juli He|12|Arshan Rajabian (10), Peter Sun (9)
+EUP-02|Euphonium|Yamaha 3-Valve Reg.|000-808|Lucas Luo|9|Kavi Bhanugopan (Gr. 10)
+EUP-04|Euphonium|Yamaha YEP321 (2023)|474420|Jayden Tan|10|Iliya Masjedi (9), Kathleen Chen (9)
+EUP-05|Euphonium|Yamaha YEP321 (2026)|804253|Iliya Emadi|10|Kaitlyn Wu (9), Leo Lu (9)
+EUP-06|Euphonium|Besson Large Shank 3V|762-825617|Mustansir Bandukwala|10|Ava Mooy (Gr. 9)
+EUP-07|Euphonium|Yamaha YEP321 (2026)|807329|Jacob Pozdrowski|11|Adrian Pau (Gr. 9)
+EUP-08|Euphonium|Yamaha (2022) 4V Reg|586113|Queena Lin|11|Logan Lam (9), Colin Xia (9)
+EUP-09|Euphonium|Yamaha Large Shank|115730|Silas Wu|11|Yuki Li (10), Bowen Pan (9)
+EUP-10|Euphonium|B&H Large Shank 3V|662-683322|Austen Wu|9|Greyson Liu (Gr. 9)
+EUP-11|Euphonium|B&H Large Shank 3V|662-684373|David Hou|9|Sophie Pavlova (Gr. 11)
+TUB-01|Tuba|Yamaha 4-Valve (2024)||Ryan Zheng|12|Aidan Sull (9), Dennis Xu (9)
+TUB-02|Tuba|Yamaha 4-Valve (2022)||Aaron Huang|12|Kandula Abeysignhe (10), Jocelyn Zou (9)
+TUB-03|Tuba|Yamaha 4-Valve||Nancy Qui|11|Felix Miao (Gr. 9)
+TUB-04|Tuba|Yamaha 4-Valve (2023)|615219|Dhilan Aggarwal|9|Tiffany Phuong (11), Emily Cheng (10), Logan Gardhouse (9)
+TUB-05|Tuba|Yamaha 3/4||Matteo Henriques|9|Guliano De Angelis Geraldo (10)
+TUB-07|Tuba|Yamaha 4-Valve (2023)|604104|Roy Chen|10|Bryan Chen (11), Shiheng Liu (9)
+TUB-EC|Tuba|Emily Carr 02||Tianxin Liang|11|Hayden Kapoor (9), Mustansir Bandukwala (10)
+TUB-M1|Tuba|Maple 01||Kevin He|9|Martin Chen (Gr. 11)
+TUB-M2|Tuba|Maple 02||Aaron Dong|9|
+TUB-SDSS|Tuba|SDSS Borrowed|||||V
+`;
+const CODE={V:'Available',R:'Out for Repair'};
+let inv=RAW.trim().split('\n').map(l=>{const p=l.split('|');return{id:p[0],section:p[1],make:p[2],serial:p[3]||'',primary:p[4]||'',grade:p[5]||'',secondary:p[6]||'',status:CODE[(p[7]||'').trim()]||'Assigned',by:''}});
+// STEP: paste your Google Apps Script web app URL between the quotes.
+// Leave it empty to keep saving on this device only.
+const API_URL='https://script.google.com/macros/s/AKfycbwPPO_CaBB51hm9X0zK4iWpZGZZ0uf0FTu4e2T3cD125y7A93fQ-cZLVOxRgY2Q-zak9g/exec';
+const SEED=inv.map(x=>({...x}));
+const SAVE_KEY='gwwInventoryV1';
+function loadSaved(){
+ try{
+  const s=JSON.parse(localStorage.getItem(SAVE_KEY));
+  if(s&&Array.isArray(s)&&s.length)inv=s;
+ }catch(_){}
+}
+function persist(){
+ try{localStorage.setItem(SAVE_KEY,JSON.stringify(inv));}catch(_){}
+}
+if(!API_URL)loadSaved();
+const LOG_KEY='gwwLogV1';
+let log=[];
+try{const l=JSON.parse(localStorage.getItem(LOG_KEY));if(Array.isArray(l))log=l}catch(_){}
+function addLog(a,it,name){
+ log.push({t:Date.now(),a,id:it.id,section:it.section,name:name||''});
+ try{localStorage.setItem(LOG_KEY,JSON.stringify(log))}catch(_){}
+}
+function logText(e){
+ const what=`${esc(e.section)} (${esc(e.id)})`,who=e.name?`<b>${esc(e.name)}</b>`:'Someone';
+ if(e.a==='out')return `${who} signed out ${what}`;
+ if(e.a==='ret')return `${who} returned ${what}`;
+ return `${what} was sent out for repair`+(e.name?` (was with ${who})`:'');
+}
+async function showLog(){
+ let entries=log;
+ $('logErr').textContent='';clearArmed=false;$('logClear').textContent='Clear log';
+ if(API_URL){
+  try{const r=await api({action:'log',key:adminKey});if(!r.ok){fail(r.error||'Could not load the log.');return}entries=r.log}
+  catch(_){fail('Could not load the log. Check your connection.');return}
+ }
+ const rows=entries.slice().reverse().map(e=>`<div class="logrow"><div>${logText(e)}</div><div class="logt">${esc(new Date(e.t).toLocaleString([],{weekday:'short',month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit'}))}</div></div>`);
+ $('logList').innerHTML=rows.length?rows.join(''):'<p class="dim">Nothing has been signed out or returned yet.</p>';
+ openD($('dLog'));
+}
+
+
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const LABEL={Assigned:'Signed out',Available:'In storage','Out for Repair':'In repair'};
+let admin=false,editing=null,adminKey='';
+let savedY=0,opener=null,lastBtn=null;
+document.addEventListener('click',e=>{const b=e.target.closest&&e.target.closest('button');if(b)lastBtn=b},true);
+function openD(d){
+ if(d.open)return;
+ savedY=window.scrollY||document.documentElement.scrollTop||0;
+ opener=lastBtn?{el:lastBtn,idx:lastBtn.dataset.edit}:null;
+ d.showModal();
+ d.scrollTop=0;
+ window.scrollTo(0,0);
+ d.scrollIntoView({block:'start'});
+}
+document.querySelectorAll('dialog').forEach(d=>d.addEventListener('close',()=>{
+ const back=()=>{
+  let el=null;
+  if(opener)el=opener.el.isConnected?opener.el:(opener.idx!=null?document.querySelector('[data-edit="'+opener.idx+'"]'):null);
+  if(el)el.scrollIntoView({block:'center'});else window.scrollTo(0,savedY);
+ };
+ back();requestAnimationFrame(back);
+}));
+
+
+function fillSections(){
+ const cur=$('fSection').value,secs=[...new Set(inv.map(i=>i.section))];
+ const opts='<option value="">All sections</option>'+secs.map(s=>`<option>${esc(s)}</option>`).join('');
+ if($('fSection').dataset.sig!==opts){$('fSection').innerHTML=opts;$('fSection').dataset.sig=opts}
+ $('fSection').value=secs.includes(cur)?cur:'';
+}
+
+function matches(it){
+ const q=$('q').value.toLowerCase(),sec=$('fSection').value,st=$('fStatus').value;
+ if(sec&&it.section!==sec)return false;
+ if(st&&it.status!==st)return false;
+ if(q&&![it.id,it.section,it.make,it.serial,it.primary,it.secondary,it.by||''].some(v=>v.toLowerCase().includes(q)))return false;
+ return true;
+}
+let lastRows=null;
+// After the list changes size, make the browser re-measure the page so touch scrolling covers the whole new list.
+function relayout(){
+ requestAnimationFrame(()=>{void document.body.offsetHeight;requestAnimationFrame(()=>{void document.documentElement.scrollHeight})});
+}
+function render(){
+ const q=$('q').value.toLowerCase(),sec=$('fSection').value,st=$('fStatus').value;
+ const out=[];
+ inv.forEach((it,i)=>{
+  if(!matches(it))return;
+  const serial=it.serial?esc(it.serial):'<span class="audit">Needs audit</span>';
+  out.push(`<tr>
+   <td class="id" data-l="Tag">${esc(it.id)}</td>
+   <td data-l="Section">${esc(it.section)}</td>
+   <td data-l="Make / model">${esc(it.make)}</td>
+   <td data-l="Serial">${serial}</td>
+   <td data-l="Assigned to">${it.primary?esc(it.primary):'<span class="dim">—</span>'}</td>
+   <td data-l="Grade">${it.grade?esc(it.grade):'<span class="dim">—</span>'}</td>
+   <td data-l="Also used by">${it.secondary?esc(it.secondary):'<span class="dim">—</span>'}</td>
+   <td data-l="Status"><span class="st ${it.status==='Out for Repair'?'Repair':it.status}">${LABEL[it.status]}</span></td>
+   <td data-l="Signed out by">${it.status==='Assigned'&&it.by?esc(it.by):'<span class="dim">—</span>'}</td>
+   <td><button data-edit="${i}">Edit</button></td>
+  </tr>`);
+ });
+ const html=out.join('');
+ if(html!==lastRows){$('rows').innerHTML=html;lastRows=html;relayout()}
+ $('none').hidden=out.length>0;
+ const n=s=>inv.filter(i=>i.status===s).length;
+ $('s-total').textContent=inv.length;
+ $('s-out').textContent=n('Assigned');
+ $('s-in').textContent=n('Available');
+ $('s-rep').textContent=n('Out for Repair');
+ $('s-aud').textContent=inv.filter(i=>!i.serial.trim()).length;
+}
+
+// Admin login
+function setMode(){
+ $('mode').textContent=admin?'Admin':'View only';
+ $('authBtn').textContent=admin?'Log out':'Admin login';
+ $('logBtn').hidden=!admin;
+ $('csvBtn').hidden=!admin;
+}
+function needAdmin(fn){admin?fn():openLogin()}
+function openLogin(){$('lu').value='';$('lp').value='';$('lerr').textContent='';openD($('dLogin'))}
+$('authBtn').onclick=()=>{if(admin){admin=false;adminKey='';setMode()}else openLogin()};
+$('fLogin').onsubmit=async e=>{
+ e.preventDefault();
+ if(API_URL){
+  const pw=$('lp').value.trim();
+  try{
+   const r=await api({action:'auth',key:pw});
+   if(r.ok){adminKey=pw;admin=true;setMode();$('dLogin').close();return}
+  }catch(_){$('lerr').textContent='Could not reach the server. Try again.';return}
+  $('lerr').textContent='That password is not right.';return;
+ }
+ $('lerr').textContent='Admin login needs the server connection.';
+};
+
+// Sign out / return
+function soFill(){
+ $('soN').value='';$('soL').value='';$('soG').value='';
+}
+// Most instruments one device (phone/computer) can have signed out at the same time. Change the number to adjust it.
+const MAX_PER_DEVICE=2;
+const MINE_KEY='gwwMyOutV1';
+let mine=null;
+function mineLoad(){if(mine)return mine;try{mine=JSON.parse(localStorage.getItem(MINE_KEY))||[]}catch(_){mine=[]}return mine}
+function mineSave(){try{localStorage.setItem(MINE_KEY,JSON.stringify(mine))}catch(_){}}
+function mineActive(){ // only count instruments that are still signed out by this device
+ const norm=s=>String(s||'').trim().toLowerCase();
+ mine=mineLoad().filter(m=>{const x=inv.find(i=>i.id===m.id);return x&&x.status==='Assigned'&&norm(x.by)===norm(m.by)});
+ mineSave();return mine;
+}
+function mineAdd(id,by){mineActive();mine=mine.filter(m=>m.id!==id);mine.push({id,by});mineSave()}
+function signer(){
+ const f=$('soN').value.trim().replace(/\s+/g,' '),l=$('soL').value.trim().replace(/\s+/g,' '),g=$('soG').value.trim().replace(/^gr\.?\s*/i,'');
+ if(!f||!l){$('soErr').textContent='Please enter your first name and last name.';return ''}
+ if(!g){$('soErr').textContent='Please select your grade.';return ''}
+ return f+' '+l+' ('+g+')';
+}
+let soList=[];
+function soPick(i){
+ $('soI').value=i;const it=inv[i];
+ $('soSel').hidden=false;$('soSel').textContent='Selected: '+it.id+' · '+it.section+' ('+it.make+') – '+LABEL[it.status];
+ $('soRes').hidden=true;
+}
+function soRender(){
+ const q=$('soQ').value.trim().toLowerCase();
+ const hits=soList.filter(i=>{const it=inv[i];return !q||[it.id,it.section,it.make,it.serial,it.primary,it.secondary,it.by||''].some(v=>v.toLowerCase().includes(q))});
+ $('soRes').hidden=false;
+ $('soRes').innerHTML=hits.length?hits.slice(0,60).map(i=>{const it=inv[i];return `<button type="button" data-i="${i}">${esc(it.id)} · ${esc(it.section)} (${esc(it.make)}) – ${LABEL[it.status]}${it.primary?' · '+esc(it.primary):''}</button>`}).join(''):'<div class="none">No instruments found.</div>';
+ if(q&&hits.length===1)soPick(hits[0]);
+ else if($('soI').value!==''&&hits.indexOf(+$('soI').value)<0){$('soI').value='';$('soSel').hidden=true}
+}
+$('soQ').addEventListener('input',soRender);
+$('soRes').addEventListener('click',e=>{const b=e.target.closest('button[data-i]');if(b)soPick(+b.dataset.i)});
+$('soBtn').onclick=async()=>{
+ if(API_URL)await refresh(true);
+ // search box for the instrument (starts with whatever was typed in the main search); repair ones are admin-only
+ soList=[];inv.forEach((it,i)=>{if(admin||it.status!=='Out for Repair')soList.push(i)});
+ $('soQ').value=$('q').value.trim();$('soI').value='';$('soSel').hidden=true;
+ $('soA').innerHTML='<option value="out">Sign out to a student</option><option value="ret">Return to storage</option>'+(admin?'<option value="rep">Send out for repair</option>':'');
+ $('soA').value='out';$('soF').hidden=false;$('soAgree').checked=false;$('soErr').textContent='';soFill();soRender();openD($('dSO'));
+};
+$('soA').onchange=()=>{$('soF').hidden=$('soA').value!=='out'};
+$('fSO').onsubmit=async e=>{
+ e.preventDefault();
+ if($('soI').value===''){$('soErr').textContent='Please search for the instrument and tap it in the list.';return}
+ const it=inv[$('soI').value],a=$('soA').value,prev=it.primary;
+ if(a==='rep'&&!admin){$('soErr').textContent='Only a teacher (admin) can send an instrument for repair.';return}
+ if(it.status==='Out for Repair'&&!admin){$('soErr').textContent='This instrument is in repair and cannot be signed out. Please see your teacher.';return}
+ if(a==='out'&&it.status==='Out for Repair'){$('soErr').textContent=it.id+' is in repair and cannot be signed out.';return}
+ if(a==='out'&&it.status==='Assigned'){$('soErr').textContent=it.id+' is already signed out'+(it.by?' by '+it.by:'')+'.';return}
+ if(a==='out'&&!admin&&mineActive().length>=MAX_PER_DEVICE){$('soErr').textContent='This device already has '+MAX_PER_DEVICE+' instrument'+(MAX_PER_DEVICE>1?'s':'')+' signed out ('+mine.map(m=>m.id).join(', ')+'). Please return one before signing out another.';return}
+ if(a==='out'&&!$('soAgree').checked){$('soErr').textContent='Please check the box to agree before signing out.';return}
+ $('soErr').textContent='';
+ if(API_URL){
+  const by=signer();
+  if(a==='out'&&!by)return;
+  if(await send({action:'event',type:a,item:{id:it.id,by},key:adminKey},'soErr')){if(a==='out')mineAdd(it.id,by);$('dSO').close()}
+  return;
+ }
+ if(a==='out'){
+  const by=signer();
+  if(!by)return;
+  it.status='Assigned';it.by=by;
+  addLog('out',it,by);mineAdd(it.id,by);
+ }
+ else if(a==='ret'){const who=it.by||prev;it.status='Available';it.by='';addLog('ret',it,who)}
+ else{const who=it.by||prev;it.status='Out for Repair';it.by='';addLog('rep',it,who)}
+ persist();render();$('dSO').close();
+};
+
+// Add / edit
+function openEdit(i){
+ editing=i;$('eErr').textContent='';
+ const it=i===null?{id:'',section:'',make:'',serial:'',primary:'',grade:'',secondary:'',status:'Available',by:''}:inv[i];
+ $('eTitle').textContent=i===null?'Add instrument':'Edit instrument';
+ $('eId').value=it.id;$('eSec').value=it.section;$('eMake').value=it.make;$('eSer').value=it.serial;
+ $('ePri').value=it.primary;$('eGr').value=it.grade;$('eSe').value=it.secondary;$('eSt').value=it.status;$('eBy').value=it.by||'';
+ openD($('dEdit'));
+}
+$('addBtn').onclick=()=>needAdmin(()=>openEdit(null));
+$('rows').onclick=e=>{const b=e.target.closest('[data-edit]');if(b)needAdmin(()=>openEdit(+b.dataset.edit))};
+$('fEdit').onsubmit=async e=>{
+ e.preventDefault();
+ const it={id:$('eId').value.trim(),section:$('eSec').value.trim(),make:$('eMake').value.trim(),serial:$('eSer').value.trim(),
+  primary:$('ePri').value.trim(),grade:$('eGr').value.trim(),secondary:$('eSe').value.trim(),status:$('eSt').value,by:($('eSt').value==='Assigned'?$('eBy').value.trim().replace(/\s+/g,' '):'')};
+ if(API_URL){
+  if(await send({action:'update',key:adminKey,item:it,oldId:editing===null?'':inv[editing].id},'eErr'))$('dEdit').close();
+  return;
+ }
+ if(editing===null)inv.push(it);else inv[editing]=it;
+ persist();fillSections();render();$('dEdit').close();
+};
+
+// Export
+$('csvBtn').onclick=()=>{
+ if(!admin)return;
+ const q=v=>{v=String(v);if(/^[=+\-@\t\r]/.test(v))v="'"+v;return `"${v.replace(/"/g,'""')}"`};
+ const rows=[['Tag','Section','Make/Model','Serial','Assigned to','Grade','Also used by','Status','Signed out by'].map(q).join(',')]
+  .concat(inv.map(i=>[i.id,i.section,i.make,i.serial,i.primary,i.grade,i.secondary,LABEL[i.status],i.status==='Assigned'?(i.by||''):''].map(q).join(',')));
+ const a=document.createElement('a');
+ a.href=URL.createObjectURL(new Blob([rows.join('\n')],{type:'text/csv'}));
+ a.download='Dr_GW_Williams_Instrument_Inventory.csv';
+ document.body.appendChild(a);a.click();a.remove();
+};
+
+const setSync=t=>{$('sync').textContent=API_URL?t:''};
+async function api(body){
+ const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)});
+ return r.json();
+}
+async function apiGet(action){
+ const r=await fetch(API_URL+(API_URL.includes('?')?'&':'?')+'action='+action);
+ return r.json();
+}
+async function refresh(force){
+ if(!force&&document.querySelector('dialog[open]'))return;
+ try{const r=await apiGet('list');if(r.ok){
+  if(!force&&touching()){setTimeout(()=>refresh(),1600);return}
+  inv=r.items;seenV=r.v;keep();fillSections();render();setSync(stamp())}}
+ catch(_){setSync('Offline - showing the last loaded list')}
+}
+let seenV=null;
+const CACHE_KEY='gwwApiCacheV1';
+function keep(){try{localStorage.setItem(CACHE_KEY,JSON.stringify({items:inv}))}catch(_){}}
+const stamp=()=>'Up to date as of '+new Date().toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});
+let lastTouch=0;
+['touchstart','touchmove','wheel','scroll'].forEach(ev=>window.addEventListener(ev,()=>{lastTouch=Date.now()},{passive:true,capture:true}));
+const touching=()=>Date.now()-lastTouch<1500;
+async function check(){
+ if(document.hidden||document.querySelector('dialog[open]'))return;
+ if(touching()){setTimeout(check,1600);return}
+ try{const r=await apiGet('version');if(r.ok&&r.v!==seenV)await refresh();else if(r.ok)setSync(stamp())}
+ catch(_){setSync('Offline - showing the last loaded list')}
+}
+function fail(msg,el){
+ if(el)$(el).textContent=msg;
+ else{setSync(msg);$('sync').scrollIntoView({block:'center'})}
+}
+const NEED_BUILD='assignments-locked-2026-11-14a';
+let sending=false;
+async function send(body,errEl){
+ if(sending)return false;
+ sending=true;
+ try{return await sendInner(body,errEl)}finally{sending=false}
+}
+async function sendInner(body,errEl){
+ setSync('Saving...');
+ if(errEl)$(errEl).textContent='';
+ try{
+  const r=await api(body);
+  if(!r.ok){await refresh(true);fail(r.error||'That did not save. Try again.',errEl);return false}
+  if(body.action==='event'&&r.item){
+   // show the change right away, then quietly refresh in the background
+   const k=inv.findIndex(x=>x.id===r.item.id);
+   if(k>=0){inv[k]=Object.assign({},inv[k],r.item);keep();render()}
+   setSync(stamp());refresh(true);
+  }else await refresh(true);
+  if(body.action==='event'&&body.type==='out'){
+   const stored=!!(r.item&&r.item.by);
+   if(!stored){
+    let live='unknown (very old script)';
+    try{const ab=await apiGet('about');if(ab&&ab.build)live=ab.build}catch(_){}
+    fail('Saved, but the live Apps Script does not store who signed it out. Live script build: '+live+'. Needed: '+NEED_BUILD+'. This page is calling the script ending ...'+API_URL.slice(-12,-5)+' (page file v17d). Open Deploy > Manage deployments > pencil > New version > Deploy, and make sure this site uses that deployment\'s Web app URL.',errEl);return false}
+  }
+  return true;
+ }catch(_){fail('Could not reach the server. Check your connection and try again.',errEl);setSync('Offline');return false}
+}
+async function boot(){
+ $('soBtn').disabled=true;setSync('Loading instruments...');
+ $('lu').required=false;$('lu').closest('.f').hidden=true;
+ try{const c=JSON.parse(localStorage.getItem(CACHE_KEY));if(c&&Array.isArray(c.items)&&c.items.length){inv=c.items;fillSections();render();setSync('Updating...')}}catch(_){}
+ try{
+  let r=await apiGet('list');
+  if(r.ok&&!r.items.length){await api({action:'seed',items:SEED});r=await apiGet('list')}
+  if(!r.ok)throw 0;
+  inv=r.items;seenV=r.v;keep();fillSections();render();$('soBtn').disabled=false;setSync(stamp());
+  setInterval(check,20000);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)check()});
+ }catch(_){setSync('Could not reach the server. Reload the page to try again.')}
+}
+['fLogin','fSO','fEdit'].forEach(id=>{
+ const f=$(id),b=f.querySelector('button.go');
+ b.type='button';
+ b.onclick=()=>{if(f.reportValidity())f.onsubmit({preventDefault(){}})};
+ f.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.tagName==='INPUT'){e.preventDefault();b.click()}});
+});
+$('logBtn').onclick=showLog;
+let clearArmed=false,clearTimer=null;
+$('logClear').onclick=async()=>{
+ const b=$('logClear');
+ if(!clearArmed){
+  clearArmed=true;b.textContent='Tap again to clear';
+  clearTimeout(clearTimer);clearTimer=setTimeout(()=>{clearArmed=false;b.textContent='Clear log'},5000);
+  return;
+ }
+ clearArmed=false;clearTimeout(clearTimer);b.textContent='Clear log';
+ $('logErr').textContent='';
+ if(API_URL){
+  try{const r=await api({action:'clearlog',key:adminKey});if(!r.ok){$('logErr').textContent=r.error||'Could not clear the log.';return}}
+  catch(_){$('logErr').textContent='Could not reach the server. Try again.';return}
+ }else{log=[];try{localStorage.removeItem(LOG_KEY)}catch(_){}}
+ await showLog();
+};
+document.querySelectorAll('[data-close]').forEach(b=>b.onclick=()=>b.closest('dialog').close());
+$('q').addEventListener('keydown',e=>{if(e.key==='Enter')e.target.blur()});
+
+// After the list is filtered it gets shorter. If the page was scrolled down past the search bar, bring the search bar
+// back to the top so the (shorter) results are on screen instead of leaving you stranded below them.
+function applyFilter(){
+ render();
+ const top=$('q').getBoundingClientRect().top;
+ if(top<0)window.scrollBy(0,top-8);
+}
+let filterT=null;
+$('q').addEventListener('input',()=>{clearTimeout(filterT);filterT=setTimeout(applyFilter,150)});
+// The section/status pickers: wait until the phone's picker has fully closed before swapping the list underneath it.
+['fSection','fStatus'].forEach(id=>$(id).addEventListener('change',()=>setTimeout(applyFilter,150)));
+if(API_URL)boot();else{fillSections();render()}
+</script>
+<script>
+// Hidden helper: tap the logo 5 times quickly to show or hide a small readout of how the page is scrolling. Normally invisible.
+(function(){
+ const logo=document.querySelector('.logo');if(!logo)return;
+ let taps=0,t0=0,box=null,timer=null,moves=0,scrolls=0;
+ window.addEventListener('touchmove',()=>{moves++},{passive:true,capture:true});
+ window.addEventListener('scroll',()=>{scrolls++},{passive:true,capture:true});
+ function text(){
+  const de=document.documentElement,cs=s=>getComputedStyle(s);
+  let inFrame='?';try{inFrame=window.top!==window?'yes':'no'}catch(_){inFrame='yes'}
+  return 'page v17d | in frame: '+inFrame+'\n'
+   +'window '+innerWidth+'x'+innerHeight+' | page height '+de.scrollHeight+'\n'
+   +'scrolled '+Math.round(scrollY||0)+' of max '+Math.max(0,de.scrollHeight-innerHeight)+'\n'
+   +'touch-moves '+moves+' | scroll events '+scrolls+' | cards '+document.querySelectorAll('#rows tr').length+'\n'
+   +'html overflow '+cs(de).overflowY+' | body overflow '+cs(document.body).overflowY+' | touch-action '+cs(document.body).touchAction+'\n'
+   +'open dialogs '+document.querySelectorAll('dialog[open]').length;
+ }
+ function toggle(){
+  if(box){clearInterval(timer);box.remove();box=null;return}
+  box=document.createElement('pre');
+  box.style.cssText='position:fixed;left:0;right:0;bottom:0;margin:0;padding:6px 8px;background:rgba(0,0,0,.85);color:#7CFC9A;font:11px/1.35 monospace;white-space:pre-wrap;z-index:99999;pointer-events:none';
+  document.body.appendChild(box);
+  const up=()=>{box.textContent=text()};up();timer=setInterval(up,400);
+ }
+ logo.addEventListener('click',()=>{const n=Date.now();taps=(n-t0<1200)?taps+1:1;t0=n;if(taps>=5){taps=0;toggle()}});
+})();
+</script>
+</body>
+</html>
