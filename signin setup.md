@@ -8,7 +8,7 @@ and only accepts emails ending in `@gapps.yrdsb.ca` or `@yrdsb.ca`. Until you fi
 2. Create a project (any name, e.g. "Williams inventory").
 3. APIs & Services > OAuth consent screen: choose **Internal** if offered (only your organization), otherwise **External**. Fill in the app name and your email; save.
 4. APIs & Services > Credentials > Create credentials > **OAuth client ID** > Application type **Web application**.
-5. Under **Authorized JavaScript origins** add your site address with no path, e.g. `https://YOUR-USERNAME.github.io`
+5. Under **Authorized JavaScript origins** add your site address with no path, e.g. `https://musicbuddytheory.github.io` (no repo name, no trailing slash)
 6. Create, then copy the Client ID (ends in `.apps.googleusercontent.com`).
 
 ## 2. Put the client ID in the page
