@@ -5,6 +5,10 @@
 // Build tag: open your Web app URL with ?action=about on the end to see which version of this script is live.
 const BUILD = 'assignments-locked-2026-11-14a';
 
+// Most instruments one person (same first + last name; grade ignored) can have signed out at once. Admin is exempt.
+const MAX_PER_PERSON = 2;
+function person_(s) { return String(s == null ? '' : s).toLowerCase().replace(/\s*\(.*\)\s*$/, '').replace(/\s+/g, ' ').trim(); }
+
 const HEAD = ['id', 'section', 'make', 'serial', 'primary', 'grade', 'secondary', 'status', 'signedBy'];
 const LOG_HEAD = ['time', 'action', 'id', 'section', 'name'];
 
@@ -236,6 +240,12 @@ function doPost(e) {
         // Assigned student, grade and "shared with" never change here. We only record WHO has it signed out right now.
         const nm = safe_(b.item.by);
         if (!nm) return json_({ ok: false, error: 'Please enter the name of the person signing it out.' });
+        if (!adminNow) {
+          const who = person_(nm);
+          const have = items_().filter(function (x) { return x.status === 'Assigned' && person_(x.by) === who; });
+          if (have.length >= MAX_PER_PERSON)
+            return json_({ ok: false, error: nm.replace(/\s*\(.*\)\s*$/, '') + ' already has ' + have.length + ' instrument' + (have.length > 1 ? 's' : '') + ' signed out (' + have.map(function (x) { return x.id; }).join(', ') + '). Please return one before signing out another.' });
+        }
         n.status = 'Assigned';
         n.by = nm;
         setStatus_(cur.id, 'Assigned', nm); logAdd_('out', n, nm);
